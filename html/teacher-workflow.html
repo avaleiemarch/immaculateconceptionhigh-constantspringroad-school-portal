@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher dashboard | School Portal</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font: 1rem/1.5 system-ui, sans-serif; color: #142842; background: #f0f4f8; }
+header { background: #142842; color: white; padding: 1rem max(1rem, calc((100% - 56rem) / 2)); }
+main { width: min(56rem, calc(100% - 2rem)); margin: 2rem auto; }
+section { background: white; padding: clamp(1rem, 4vw, 2rem); border: 1px solid #d3dce7; border-radius: .75rem; margin-bottom: 1rem; }
+h1, h2 { margin-top: 0; }
+label { display: block; font-weight: 600; }
+select, input, button { font: inherit; padding: .45rem .65rem; border: 1px solid #74859b; border-radius: .35rem; background: white; color: inherit; }
+input { width: 7rem; }
+button { background: #175451; color: white; cursor: pointer; margin-top: 1rem; }
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td { padding: .55rem .35rem; text-align: left; border-bottom: 1px solid #d3dce7; }
+caption { text-align: left; font-weight: 600; }
+#status { min-height: 1.5em; margin-bottom: 0; }
+@media print {
+  header, h1, #grade-entry, #report-controls { display: none; }
+  body, #report { background: white; }
+  main { width: 100%; margin: 0; }
+  #report { border: 0; padding: 0; }
+}
+</style>
+<header>School Portal</header>
+<main>
+<h1>Teacher dashboard</h1>
+<section id="grade-entry" aria-labelledby="entry-title">
+<h2 id="entry-title">Grade entry</h2>
+<label for="subject">Subject</label>
+<select id="subject"></select>
+<p>Enter grades from 0 to 100. A blank field removes a saved grade.</p>
+<form id="grades">
+<table>
+<thead><tr><th scope="col">Student</th><th scope="col">Grade (%)</th></tr></thead>
+<tbody id="grade-rows"></tbody>
+</table>
+<button id="save" type="submit">Save grades</button>
+</form>
+<p id="status" role="status"></p>
+</section>
+<section id="report" aria-labelledby="report-title">
+<h2 id="report-title">Report card</h2>
+<div id="report-controls">
+<label for="student">Student</label>
+<select id="student"></select>
+<button id="print" type="button">Print report card</button>
+</div>
+<table>
+<caption id="report-name"></caption>
+<thead><tr><th scope="col">Subject</th><th scope="col">Grade (%)</th></tr></thead>
+<tbody id="report-rows"></tbody>
+</table>
+</section>
+</main>
+<script>
+"use strict";
+
+// Replace the demo data and storage functions with the portal's shared data layer.
+// Use the logged-in teacher's assigned subjects when connecting to the portal.
+const subjects = [
+  { id: "web", name: "Web Programming" },
+  { id: "math", name: "Mathematics" },
+  { id: "english", name: "English" }
+];
+const students = [
+  { id: "s1", name: "Ari James", subjects: ["web", "math", "english"] },
+  { id: "s2", name: "Sam Lee", subjects: ["web", "english"] },
+  { id: "s3", name: "Alex Clarke", subjects: ["math", "english"] }
+];
+const storageKey = "school-portal-teacher-demo-v1";
+const sampleGrades = { web: { s1: 85 }, math: { s3: 92 } };
+
+function readGrades() {
+  const saved = localStorage.getItem(storageKey);
+  return saved === null ? sampleGrades : JSON.parse(saved);
+}
+
+function writeGrades(grades) {
+  localStorage.setItem(storageKey, JSON.stringify(grades));
+}
+
+const subjectSelect = document.querySelector("#subject");
+const studentSelect = document.querySelector("#student");
+const gradeRows = document.querySelector("#grade-rows");
+const reportRows = document.querySelector("#report-rows");
+const status = document.querySelector("#status");
+const saveButton = document.querySelector("#save");
+let grades;
+
+function addOptions(select, items) {
+  for (const item of items) {
+    select.add(new Option(item.name, item.id));
+  }
+}
+
+function renderGradeEntry() {
+  const subjectId = subjectSelect.value;
+  const enrolled = students.filter(student => student.subjects.includes(subjectId));
+  gradeRows.replaceChildren();
+  saveButton.disabled = enrolled.length === 0;
+  if (!enrolled.length) {
+    const cell = gradeRows.insertRow().insertCell();
+    cell.colSpan = 2;
+    cell.textContent = "No students enrolled in this subject.";
+  }
+  for (const student of enrolled) {
+    const row = gradeRows.insertRow();
+    const label = document.createElement("label");
+    label.htmlFor = "grade-" + student.id;
+    label.textContent = student.name;
+    row.insertCell().append(label);
+
+    const input = document.createElement("input");
+    input.id = label.htmlFor;
+    input.dataset.studentId = student.id;
+    input.type = "number";
+    input.min = "0";
+    input.max = "100";
+    input.step = "any";
+    input.value = grades[subjectId]?.[student.id] ?? "";
+    row.insertCell().append(input);
+  }
+}
+
+function renderReport() {
+  const student = students.find(item => item.id === studentSelect.value);
+  document.querySelector("#report-name").textContent = student.name;
+  reportRows.replaceChildren();
+  for (const subject of subjects.filter(item => student.subjects.includes(item.id))) {
+    const row = reportRows.insertRow();
+    row.insertCell().textContent = subject.name;
+    row.insertCell().textContent = grades[subject.id]?.[student.id] ?? "Not entered";
+  }
+}
+
+try {
+  grades = readGrades();
+} catch {
+  grades = sampleGrades;
+  status.textContent = "Saved grades could not be loaded. Showing sample grades.";
+}
+addOptions(subjectSelect, subjects);
+addOptions(studentSelect, students);
+renderGradeEntry();
+renderReport();
+
+subjectSelect.addEventListener("change", () => {
+  renderGradeEntry();
+  status.textContent = "";
+});
+studentSelect.addEventListener("change", renderReport);
+document.querySelector("#print").addEventListener("click", () => window.print());
+
+document.querySelector("#grades").addEventListener("submit", event => {
+  event.preventDefault();
+  const subjectId = subjectSelect.value;
+  try {
+    const latest = readGrades();
+    const subjectGrades = { ...latest[subjectId] };
+    for (const input of gradeRows.querySelectorAll("input")) {
+      if (input.value === "") {
+        delete subjectGrades[input.dataset.studentId];
+      } else {
+        subjectGrades[input.dataset.studentId] = input.valueAsNumber;
+      }
+    }
+    const updated = { ...latest, [subjectId]: subjectGrades };
+    writeGrades(updated);
+    grades = updated;
+    renderReport();
+    status.textContent = "Grades saved for " + subjectSelect.selectedOptions[0].text + ".";
+  } catch {
+    status.textContent = "Grades could not be saved. Check that browser storage is available and try again.";
+  }
+});
+</script>
+</html>
