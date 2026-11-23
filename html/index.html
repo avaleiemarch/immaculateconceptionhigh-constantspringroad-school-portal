@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Student registry and academic grades dashboard">
+  <title>Admin Dashboard | CIT2011</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="Campus Desk home"><span class="brand-mark">C</span><span>Campus<span class="brand-light">Desk</span><small>ADMIN PORTAL</small></span></a>
+    <p class="nav-label">MENU</p>
+    <nav aria-label="Main navigation">
+      <a class="nav-item active" href="#overview"><span>▦</span> Overview</a>
+      <a class="nav-item" href="#students"><span>♧</span> Student registry</a>
+      <a class="nav-item" href="#grades"><span>▤</span> Grades matrix</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Changes save on this device <small>Browser storage · local only</small></div>
+  </aside>
+
+  <main class="main-content" id="overview">
+    <header class="topbar"><div><p class="eyebrow">CIT2011 · ADMIN DASHBOARD</p><h1>Student administration</h1></div><div class="top-actions"><span class="today" id="today"></span><span class="avatar">AD</span></div></header>
+    <section class="welcome"><div><p class="eyebrow light">ACADEMIC OPERATIONS</p><h2>Keep student records and results in one place.</h2><p>Manage the registry, organize active semesters, and review grades by subject.</p></div><a class="button button-white" href="#students">Open registry <span>→</span></a></section>
+
+    <section class="stats" aria-label="Registry summary">
+      <article class="stat-card"><div class="stat-icon violet">♧</div><p>Registered students</p><strong id="student-count">0</strong><small>Student records in this browser</small></article>
+      <article class="stat-card"><div class="stat-icon mint">▤</div><p>Active semester</p><strong class="stat-text" id="active-semester">Not set</strong><small>Choose a semester in the registry</small></article>
+      <article class="stat-card"><div class="stat-icon gold">✓</div><p>Grade entries</p><strong id="grade-count">0</strong><small>Saved subject results</small></article>
+    </section>
+
+    <section class="panel" id="students">
+      <div class="section-heading"><div><p class="eyebrow">PEOPLE & ENROLMENT</p><h2>Student registry</h2><p class="muted">Add, edit, search and organize student records.</p></div><button class="button button-primary" id="add-student">＋ Add student</button></div>
+      <div class="toolbar"><label class="search"><span>⌕</span><input id="student-search" type="search" placeholder="Search name or student ID" aria-label="Search students"></label><label class="select-wrap"><span class="sr-only">Filter by semester</span><select id="semester-filter"><option value="">All semesters</option></select></label><span class="result-count" id="student-result-count">0 students</span></div>
+      <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>EMAIL</th><th>ACTIVE SEMESTER</th><th>REGISTERED</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="student-rows"></tbody></table><div class="empty-state" id="students-empty"><div class="empty-icon">♧</div><strong>No student records yet</strong><p>Add a student to start building the registry.</p><button class="text-button" id="empty-add">＋ Add the first student</button></div></div>
+    </section>
+
+    <section class="panel grades-panel" id="grades">
+      <div class="section-heading"><div><p class="eyebrow">ACADEMIC PERFORMANCE</p><h2>Grades matrix</h2><p class="muted">Enter and update scores for registered students and subjects.</p></div><div class="heading-actions"><button class="button button-outline" id="manage-subjects">Manage subjects</button><button class="button button-primary" id="add-grade">＋ Add result</button></div></div>
+      <div class="toolbar"><label class="search"><span>⌕</span><input id="grade-search" type="search" placeholder="Search student" aria-label="Search grades by student"></label><label class="select-wrap"><span class="sr-only">Filter grades by subject</span><select id="subject-filter"><option value="">All subjects</option></select></label><span class="result-count" id="grade-result-count">0 results</span></div>
+      <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>SUBJECT</th><th>SEMESTER</th><th>SCORE</th><th>UPDATED</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="grade-rows"></tbody></table><div class="empty-state" id="grades-empty"><div class="empty-icon">▤</div><strong>No grade entries yet</strong><p>Add subjects and student results to build the academic matrix.</p><button class="text-button" id="empty-grade">＋ Add a result</button></div></div>
+      <p class="grade-note">Scores are stored as entered. Confirm the course list, grading scale and pass rules with your group before integration.</p>
+    </section>
+    <footer>Admin Dashboard <span>·</span> CIT2011 group project <span>·</span> Prototype data is stored in this browser</footer>
+  </main>
+
+  <dialog id="student-dialog"><form id="student-form" method="dialog"><div class="dialog-heading"><div><p class="eyebrow">STUDENT REGISTRY</p><h2 id="student-dialog-title">Add student</h2></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><input type="hidden" id="student-original-id"><label>Full name<input id="student-name" required maxlength="100" autocomplete="name" placeholder="Enter full name"></label><label>Student ID<input id="student-id" required maxlength="40" placeholder="Enter student ID"></label><label>Email address<input id="student-email" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com"></label><label>Active semester<input id="student-semester" required maxlength="80" placeholder="Enter semester label"></label><div class="dialog-actions"><button type="button" class="button button-outline" data-close>Cancel</button><button class="button button-primary" type="submit">Save student</button></div></form></dialog>
+
+  <dialog id="grade-dialog"><form id="grade-form" method="dialog"><div class="dialog-heading"><div><p class="eyebrow">ACADEMIC MATRIX</p><h2 id="grade-dialog-title">Add result</h2></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><input type="hidden" id="grade-original-key"><label>Student<select id="grade-student" required></select></label><label>Subject<select id="grade-subject" required></select></label><label>Semester<input id="grade-semester" required maxlength="80" placeholder="Enter semester label"></label><label>Score<input id="grade-score" required type="number" min="0" max="100" step="0.01" placeholder="0 to 100"><small class="field-hint">The score is recorded as a percentage. Confirm the official grading scale with your group.</small></label><div class="dialog-actions"><button type="button" class="button button-outline" data-close>Cancel</button><button class="button button-primary" type="submit">Save result</button></div></form></dialog>
+
+  <dialog id="subjects-dialog"><form id="subject-form" method="dialog"><div class="dialog-heading"><div><p class="eyebrow">ACADEMIC MATRIX</p><h2>Manage subjects</h2></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><p class="muted">Enter the subject names agreed by your group. Names can be changed later.</p><div class="subject-input-row"><label class="grow">New subject<input id="subject-name" maxlength="100" placeholder="Enter subject name"></label><button class="button button-primary" type="submit">Add</button></div><ul id="subject-list" class="subject-list"></ul><div class="dialog-actions"><button type="button" class="button button-primary" data-close>Done</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
