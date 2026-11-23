@@ -1,8 +1,3 @@
-/*
- * Student Registry + Academic Matrix
- * Shared browser contract is documented in HANDOFF.md.
- * No names, courses, grade bands or login assumptions are preloaded.
- */
 (() => {
   'use strict';
   const STORAGE = Object.freeze({ students: 'cit2011.students', subjects: 'cit2011.subjects', grades: 'cit2011.grades' });

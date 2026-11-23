@@ -1,82 +1,57 @@
-# CIT2011 Admin Dashboard — Brandon's handoff
+# Admin Dashboard Notes
 
-This folder is a self-contained, beginner-readable implementation of the **Student Registry** and **Grades Grid / Academic Matrix** responsibilities identified for Brandon in the referenced conversation. It is built with plain HTML, CSS and JavaScript and uses the browser's `localStorage`.
+## Open the page
 
-## Run it
+Keep `index.html`, `styles.css` and `app.js` together in one folder. Open `index.html` in a web browser. The page starts empty; enter the student and subject information used by the group.
 
-1. Keep `index.html`, `styles.css` and `app.js` together in the same folder.
-2. Open `index.html` in a current browser (Chrome, Edge or Firefox).
-3. Add real student and subject data agreed by your group. Nothing is prefilled.
+## What it does
 
-This is a browser-only prototype: it has no server, shared database or real admin login. Browser storage belongs to that browser profile on that device. Opening the page on another computer will not share records. Do not enter sensitive student information until your group agrees that local browser storage is appropriate.
+The registry lets you add, edit, search, filter and remove student records. Each record has a name, student ID, email and active semester.
 
-## What the page does
+The grades matrix lets you add subjects and enter, edit, search, filter and remove results. Each result belongs to one student, subject and semester. A score must be between 0 and 100. The same student cannot have two results for the same subject and semester.
 
-- **Student registry:** add records with full name, student ID, email and active-semester label; edit a record; search by name or ID; filter by semester; remove a record.
-- **Grades matrix:** add agreed subject names; add, view, edit, search, filter and remove a numeric score for a student, subject and semester. Duplicate results for the same student, subject and semester are prevented.
-- **Persistence:** each save is stored in `localStorage`. Reloading the same page in the same browser profile retains the data.
-- **Validation:** student IDs are required and unique ignoring case; email uses the browser's email input validation; scores are restricted to 0–100. No letter-grade, pass/fail, weighting or GPA rule is invented.
-- **Accessibility and layout:** labelled form fields, keyboard-operable controls, status announcements, mobile layout and escaped user-entered text.
+## Saving data
 
-## Proposed shared data contract
+The page saves three lists in the browser: `cit2011.students`, `cit2011.subjects` and `cit2011.grades`. Data remains in the same browser profile on the same device. It is not sent to a shared database, and the page does not include a login.
 
-The assignment attachment was not available for direct inspection in this workspace, and no teammate source code or agreed schema was present. The keys and fields below are therefore a **proposed contract for discussion**, not a claim about what Lexi, Gerry or Antoni have implemented. Agree on one canonical student ID, semester format, subject/course identifier and grade scale with the group before merging.
+Student records use these fields:
 
-```js
-// localStorage key: cit2011.students
-[
-  {
-    fullName: "...",
-    studentId: "...",        // stable unique ID shared with Finance and Teacher modules
-    email: "...",
-    activeSemester: "...",    // group must agree the exact semester naming convention
-    createdAt: "ISO-8601 timestamp"
-  }
-]
-
-// localStorage key: cit2011.subjects
-["...", "..."]               // user/group-entered; ideally agree canonical course codes
-
-// localStorage key: cit2011.grades
-[
-  {
-    studentId: "...",        // joins to students[].studentId
-    subject: "...",           // agree course code vs display name
-    semester: "...",          // use the same convention as the registry/teacher module
-    score: 0,                  // numeric percentage 0–100 in this prototype
-    updatedAt: "ISO-8601 timestamp"
-  }
-]
+```json
+{
+  "fullName": "",
+  "studentId": "",
+  "email": "",
+  "activeSemester": "",
+  "createdAt": ""
+}
 ```
 
-The grade identity is the combination `(studentId, subject, semester)`. If the teacher module needs multiple assessments per subject (for example coursework plus exam), agree extra fields such as assessment ID/type and weighting before integration; the current one-score-per-subject model does not assume those details.
+Grade records use these fields:
 
-## Integration points to confirm with teammates
+```json
+{
+  "studentId": "",
+  "subject": "",
+  "semester": "",
+  "score": 0,
+  "updatedAt": ""
+}
+```
 
-- **Lexi (login/data):** confirm the shared student schema, canonical storage keys, ID rules and whether these pages should require an authenticated admin session. This prototype does not implement authentication.
-- **Gerry (teacher module):** confirm the subject/course identifier, semester label, grade field names, score scale, assessment structure and whether teacher-entered scores should appear here. Both sides must read/write the agreed structure.
-- **Antonique (finance):** confirm which student fields and stable ID the tuition ledger uses. Keep that identifier consistent; avoid copying or separately inventing a second student table.
-- **Avalei (UI/UX):** replace the prototype's styles/navigation with the shared design and route/page structure while retaining the form IDs or updating the event wiring in `app.js`.
+The student ID connects a grade to a student record. Before joining this page with the other group sections, agree on the student ID, semester names, subject names or codes, and grading rules. Lexi's login and data setup, Gerry's teacher grade entry, Antonique's tuition ledger, and Avalei's shared layout may each need to use the same choices.
 
-For a later server/database integration, replace the `read()` and `save()` functions near the top of `app.js` with the team's agreed API calls. Keep rendering and form validation separate from persistence. The existing browser key names are namespaced with `cit2011.` so they are easier to locate and less likely to collide with unrelated pages.
+## Files
 
-## Viva-friendly code tour
+- `index.html` contains the page sections, tables and forms.
+- `styles.css` controls the appearance and mobile layout.
+- `app.js` loads and saves the lists, checks form entries and refreshes the tables.
 
-- `index.html` contains the page sections, tables, forms and dialogs.
-- `styles.css` controls the visual design, including the mobile breakpoint.
-- `app.js` loads stored arrays into `state`; render functions turn those arrays into table rows; form handlers update the arrays and call `save()`.
-- `escapeHTML()` encodes text before putting it into table markup, so typed names and labels are displayed as text.
-- `localStorage` stores strings only, so `JSON.stringify()` saves arrays and `JSON.parse()` reads them back. The `try/catch` prevents a broken/disabled storage value from crashing the page.
-- Student IDs are the join between the registry, grades and (after agreement) the other modules.
+## Quick check
 
-## Manual check checklist
+1. Open the page and add a test student.
+2. Refresh the page and confirm the student is still listed.
+3. Edit the student, then search and filter the registry.
+4. Add a subject and a test grade. Edit it and try entering a duplicate for the same student, subject and semester.
+5. Remove the test grade and student when finished. Removing a student also removes that student's grades.
 
-1. Open the page and confirm it starts with empty tables and zero counts.
-2. Add a student with a made-up test entry, then refresh: the record should remain.
-3. Edit the student; search by name and ID; filter by semester.
-4. Add a test subject and score; edit it; check that a duplicate student/subject/semester result is rejected.
-5. Search/filter the matrix, then remove the test result and student. Student removal also removes that student's grades.
-6. Open the page in another browser profile: it should have separate storage, demonstrating that this prototype is not a shared group database.
-7. Clear the test data after the check. The delete controls ask before removing records.
-
-No formal tests were run; use this checklist for a browser walkthrough after the group confirms its data rules.
+The JavaScript syntax and main page elements were checked. Run through the steps above in a browser before showing the page to the group.
