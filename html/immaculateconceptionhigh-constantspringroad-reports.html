@@ -1,0 +1,91 @@
+<!--
+    Course: CIT2011 Web Programming
+    Project: Group Project - Immaculate Conception High School Portal
+    File: immaculateconceptionhigh-constantspringroad-reports.html
+    Lab: Friday 8-9:50AM
+
+    Group Members:
+    1. Avalei March - 2509865
+    2. Alexia Burkley - 2408730
+    3. Brandon Cole - 2405942
+    4. Gerry Brown - 2506281
+    5. Antonique Tulloch - 2401011
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | Immaculate Conception High School Portal</title>
+
+    <link rel="stylesheet" href="../css/immaculateconceptionhigh-constantspringroad-style.css">
+    <link rel="stylesheet" href="../css/immaculateconceptionhigh-constantspringroad-finance.css">
+</head>
+
+<body>
+
+    <!-- School header and navigation -->
+
+    <header>
+        <a href="immaculateconceptionhigh-constantspringroad-index.html" class="site-title">
+            <img src="../assets/images/logo.png" alt="Immaculate Conception High School logo" class="site-logo">
+            Immaculate Conception High School Portal
+        </a>
+
+       <nav>
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="immaculateconceptionhigh-constantspringroad-finance.html">Finance</a></li>
+        <li><a href="immaculateconceptionhigh-constantspringroad-reports.html" class="active">Reports</a></li>
+    </ul>
+</nav>
+    </header>
+
+    <main id="master">
+
+        <section>
+            <h1>Student Reporting System</h1>
+            <p>Search and view student information, grades and financial records.</p>
+        </section>
+
+        <!-- Student search -->
+
+        <section>
+            <h2>Search Student</h2>
+
+            <form id="reportForm">
+                <label for="reportSearch">Student Name or ID:</label>
+                <input type="search" id="reportSearch" required>
+                <button type="submit">Search</button>
+            </form>
+        </section>
+
+        <!-- Student report details -->
+
+        <section>
+            <h2>Student Information</h2>
+            <div id="studentInformation"></div>
+        </section>
+
+        <section>
+            <h2>Academic Report</h2>
+            <div id="academicReport"></div>
+        </section>
+
+        <section>
+            <h2>Financial Statement</h2>
+            <div id="financialStatement"></div>
+        </section>
+
+        <!-- Print report -->
+
+        <section>
+            <button type="button" id="printReport">Print Student Report</button>
+        </section>
+
+    </main>
+
+    <script src="../js/immaculateconceptionhigh-constantspringroad-reports.js"></script>
+
+</body>
+</html>

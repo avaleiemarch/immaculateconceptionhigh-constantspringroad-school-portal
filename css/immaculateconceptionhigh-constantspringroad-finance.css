@@ -1,0 +1,126 @@
+/*
+ Course: CIT2011 Web Programming
+    Project: Group Project - Immaculate Conception High School Portal
+    File: immaculateconceptionhigh-constantspringroad-style.css
+    Lab: Friday 8-9:50AM
+    
+    Group Members:
+    1. Avalei March - 2509865
+    2. Alexia Burkley - 2408730
+    3. Brandon Cole - 2405942
+    4. Gerry Brown - 2506281
+    5. Antonique Tulloch - 2401011
+*/
+#paymentForm input,
+#search,
+#statusFilter,
+#reportSearch {
+    padding: 10px;
+    margin: 8px 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+#paymentForm button,
+#reportForm button,
+#printReport {
+    background-color: #00008B;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#paymentForm button:hover,
+#reportForm button:hover,
+#printReport:hover {
+    background-color: #0000CD;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #00008B;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f8ff;
+}
+
+/* Student reports */
+
+#studentInformation,
+#academicReport,
+#financialStatement {
+    line-height: 2;
+}
+
+#studentInformation,
+#financialStatement {
+    white-space: pre-line;
+}
+
+
+@media print {
+    nav,
+    #reportForm,
+    #printReport,
+    section:has(#reportForm),
+    section:has(#printReport) {
+        display: none;
+    }
+
+    header {
+        position: static;
+        background-color: white;
+        color: black;
+    }
+
+    header a,
+    header .site-title {
+        color: black;
+    }
+
+    body {
+        background-color: white;
+    }
+
+    #master {
+        margin: 0;
+        padding: 0;
+    }
+
+    #master section {
+        padding: 10px 0;
+        margin: 0;
+        min-height: 0;
+    }
+
+    section {
+        border: none;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    h1, h2 {
+        margin: 10px 0;
+    }
+
+    p {
+        margin: 5px 0;
+    }
+}

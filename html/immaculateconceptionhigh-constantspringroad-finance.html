@@ -1,0 +1,114 @@
+<!--
+    Course: CIT2011 Web Programming
+    Project: Group Project - Immaculate Conception High School Portal
+    File: immaculateconceptionhigh-constantspringroad-finance.html
+    Lab: Friday 8-9:50AM
+
+    Group Members:
+    1. Avalei March - 2509865
+    2. Alexia Burkley - 2408730
+    3. Brandon Cole - 2405942
+    4. Gerry Brown - 2506281
+    5. Antonique Tulloch - 2401011
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance | Immaculate Conception High School Portal</title>
+
+    <link rel="stylesheet" href="../css/immaculateconceptionhigh-constantspringroad-style.css">
+    <link rel="stylesheet" href="../css/immaculateconceptionhigh-constantspringroad-finance.css">
+</head>
+
+<body>
+
+    <!-- School header and navigation -->
+
+    <header>
+        <a href="immaculateconceptionhigh-constantspringroad-index.html" class="site-title">
+            <img src="../assets/images/logo.png" alt="Immaculate Conception High School logo" class="site-logo">
+            Immaculate Conception High School Portal
+        </a>
+<nav>
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="immaculateconceptionhigh-constantspringroad-finance.html" class="active">Finance</a></li>
+        <li><a href="immaculateconceptionhigh-constantspringroad-reports.html">Reports</a></li>
+    </ul>
+</nav>
+    </header>
+
+    <main id="master">
+
+        <section>
+            <h1>Financial Management Dashboard</h1>
+            <p>Manage student fees, payments and balances.</p>
+        </section>
+
+        <!-- Financial summary -->
+
+        <section>
+            <h2>Financial Summary</h2>
+
+            <p>Total Fees: <span id="totalFees">J$0</span></p>
+            <p>Total Payments: <span id="totalPayments">J$0</span></p>
+            <p>Outstanding Balance: <span id="totalBalance">J$0</span></p>
+        </section>
+
+        <!-- Payment form -->
+
+        <section>
+            <h2>Record Student Payment</h2>
+
+            <form id="paymentForm">
+                <label for="studentId">Student ID:</label>
+                <input type="text" id="studentId" required>
+
+                <label for="amount">Payment Amount (J$):</label>
+                <input type="number" id="amount" min="1" required>
+
+                <button type="submit">Record Payment</button>
+            </form>
+        </section>
+
+        <!-- Financial records -->
+
+        <section>
+            <h2>Financial Records</h2>
+
+            <label for="search">Search Student:</label>
+            <input type="search" id="search" placeholder="Search by name or ID">
+
+            <label for="statusFilter">Payment Status:</label>
+            <select id="statusFilter">
+                <option value="All">All</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Outstanding">Outstanding</option>
+            </select>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Fees</th>
+                        <th>Amount Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="financeRecords">
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="../js/immaculateconceptionhigh-constantspringroad-finance.js"></script>
+
+</body>
+</html>
